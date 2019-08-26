@@ -15,9 +15,13 @@ class App extends React.Component {
         let board = this.generateBoard();
 
         return (
-            <div>
-                <div id="board">{board}</div>
-                <ControlPanel/>
+            <div className="container">
+                <div className="row justify-content-center">
+                    <div>
+                        <ControlPanel/>
+                        <div id="board">{board}</div>
+                    </div>
+                </div>
             </div>
         );
     }
@@ -30,7 +34,7 @@ class App extends React.Component {
             for (let i = 0; i < this.columns; i++) {
                 row.push((<Cell/>));
             }
-            rows.push((<div className="row" style={{display: "inline-block"}}>{row}</div>))
+            rows.push((<div className="board-row" style={{display: "inline-block"}}>{row}</div>))
         }
 
         return rows;

@@ -11,8 +11,8 @@ class Cell extends React.Component {
 
     render() {
         var style = {
-            width: 20,
-            height: 20,
+            width: 30,
+            height: 30,
             border: "1px solid #AEC1FF",
             borderRadius: "2px",
             backgroundColor: this.state.isSelected ? "#91C5FF" : "white",

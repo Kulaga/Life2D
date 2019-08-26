@@ -11,3 +11,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.control-panel {
+  padding: 10px 10px 50px;
+  text-align: center;
+}

@@ -2,7 +2,12 @@ import React from 'react';
 
 class ControlPanel extends React.Component {
     render() {
-        return <div>ControlPanel</div>
+        return (
+            <div className="control-panel">
+                <button type="button" className="btn btn-outline-primary m-1">Start</button>
+                <button type="button" className="btn btn-outline-secondary m-1">Reset</button>
+            </div>
+        )
     }
 }
 
