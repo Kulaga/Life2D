@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import Cell from './Cell'
+import ControlPanel from './ControlPanel'
 
 class App extends React.Component {
     constructor(props) {
@@ -13,7 +14,12 @@ class App extends React.Component {
     render() {
         let board = this.generateBoard();
 
-        return (<div id="board">{board}</div>);
+        return (
+            <div>
+                <div id="board">{board}</div>
+                <ControlPanel/>
+            </div>
+        );
     }
 
     generateBoard() {
