@@ -11,6 +11,12 @@ class App extends React.Component {
     }
 
     render() {
+        let board = this.generateBoard();
+
+        return (<div id="board">{board}</div>);
+    }
+
+    generateBoard() {
         let rows = [];
 
         for (let i = 0; i < this.rows; i++) {
@@ -20,8 +26,8 @@ class App extends React.Component {
             }
             rows.push((<div className="row" style={{display: "inline-block"}}>{row}</div>))
         }
-        
-        return (<div id="board">{rows}</div>);
+
+        return rows;
     }
 }
 
