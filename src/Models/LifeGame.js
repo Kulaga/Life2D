@@ -8,13 +8,16 @@ class LifeGame {
     }
 
     getNextIteration(currentState) {
-        const nextState = currentState.slice();
+        const nextState = this.copyArray(currentState);
         const aliveCells = this.getAliveCellIndexes(currentState);
-        this.shuffle(aliveCells);
 
         for (let i = 0; i < aliveCells.length; i++) {
             let cell = aliveCells[i];
             if (this.isOverpopulated(currentState, cell)) {
+                nextState[cell.row][cell.col] = CellState.Dead;
+                continue;
+            }
+            if (this.isUnderpopulated(currentState, cell)) {
                 nextState[cell.row][cell.col] = CellState.Dead;
                 continue;
             }
@@ -23,8 +26,12 @@ class LifeGame {
         return nextState;
     }
 
-    shuffle(array) {
-        return array.sort(() => 0.5 - Math.random());
+    copyArray(board) {
+        let copy = [];
+        for (const row of board) {
+            copy.push(row.slice())
+        }
+        return copy;
     }
 
     getAliveCellIndexes(currentState) {
@@ -40,8 +47,8 @@ class LifeGame {
     }
 
     isOverpopulated(board, cell) {
-        let neighbors = this.getNeighborsIndexes(cell.row, cell.col).map((index) => board[index.row][index.col]);
-        return neighbors.filter(c => c == CellState.Alive).length >= 3;
+        let neighbors = this.getNeighbors(cell, board);
+        return neighbors.filter(c => c == CellState.Alive).length > 3;
     }
 
     getNeighborsIndexes(row, col) {
@@ -55,6 +62,15 @@ class LifeGame {
             new Cell(this.toProjectedRow(row + 1) , this.toProjectedCol(col)),
             new Cell(this.toProjectedRow(row + 1) , this.toProjectedCol(col + 1))
         ]
+    }
+
+    getNeighbors(cell, board) {
+        return this.getNeighborsIndexes(cell.row, cell.col).map((index) => board[index.row][index.col]);
+    }
+
+    isUnderpopulated(board, cell) {
+        let neighbors = this.getNeighbors(cell, board);
+        return neighbors.filter(c => c == CellState.Alive).length < 2;
     }
 
     toProjectedRow(number) {
