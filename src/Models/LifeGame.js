@@ -13,17 +13,16 @@ class LifeGame {
 
         for (let i = 0; i < aliveCells.length; i++) {
             let cell = aliveCells[i];
-            if (this.isOverpopulated(currentState, cell)) {
+            if (this.shouldDie(currentState, cell)) {
                 nextState[cell.row][cell.col] = CellState.Dead;
-                continue;
-            }
-            if (this.isUnderpopulated(currentState, cell)) {
-                nextState[cell.row][cell.col] = CellState.Dead;
-                continue;
             }
         }
 
         return nextState;
+    }
+
+    shouldDie(currentState, cell) {
+        return this.isUnderpopulated(currentState, cell) || this.isOverpopulated(currentState, cell);
     }
 
     copyArray(board) {
