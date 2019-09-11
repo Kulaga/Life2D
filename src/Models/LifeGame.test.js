@@ -3,7 +3,7 @@ import LifeGame from "./LifeGame";
 import * as _ from 'underscore';
 import Cell from "./Cell";
 
-test("empty board should be immutable", () => {
+test("empty board should lead to end of game", () => {
     const sut = new LifeGame(4, 4);
     const currentState = [
         [CellState.Dead, CellState.Dead, CellState.Dead, CellState.Dead],
@@ -14,7 +14,7 @@ test("empty board should be immutable", () => {
 
     const result = sut.getNextIteration(currentState);
 
-    expect(result).toStrictEqual(currentState);
+    expect(result).toStrictEqual(null);
 })
 
 test("get neighbors inside board should be correct", () => {
@@ -68,7 +68,7 @@ test("neighbors are located on torus", () => {
     ]);
 })
 
-test("random cell should dead because of overpopulation case 1", () => {
+test("cell should dead because of overpopulation case 1", () => {
     const sut = new LifeGame(4, 4);
     const currentState = [
         [CellState.Dead, CellState.Dead, CellState.Alive, CellState.Dead],
@@ -79,12 +79,8 @@ test("random cell should dead because of overpopulation case 1", () => {
 
     const result = sut.getNextIteration(currentState);
 
-    expect(result).toStrictEqual([
-        [CellState.Dead, CellState.Dead, CellState.Alive, CellState.Dead],
-        [CellState.Dead, CellState.Dead, CellState.Dead, CellState.Dead],
-        [CellState.Dead, CellState.Alive, CellState.Alive, CellState.Dead],
-        [CellState.Dead, CellState.Dead, CellState.Dead, CellState.Dead]
-    ]);
+    expect(result[1][1]).toBe(CellState.Dead);
+    expect(result[1][2]).toBe(CellState.Dead);
 })
 
 test("random cell should dead because of overpopulation case 2", () => {
@@ -98,12 +94,8 @@ test("random cell should dead because of overpopulation case 2", () => {
 
     const result = sut.getNextIteration(currentState);
 
-    expect(result).toEqual([
-        [CellState.Dead, CellState.Alive, CellState.Dead, CellState.Dead],
-        [CellState.Dead, CellState.Dead, CellState.Dead, CellState.Dead],
-        [CellState.Dead, CellState.Alive, CellState.Alive, CellState.Dead],
-        [CellState.Dead, CellState.Dead, CellState.Dead, CellState.Dead]
-    ]);
+    expect(result[1][1]).toBe(CellState.Dead);
+    expect(result[1][2]).toBe(CellState.Dead);
 })
 
 test("random cell should dead because of overpopulation case 3", () => {
@@ -117,12 +109,8 @@ test("random cell should dead because of overpopulation case 3", () => {
 
     const result = sut.getNextIteration(currentState);
 
-    expect(result).toEqual([
-        [CellState.Dead, CellState.Alive, CellState.Dead, CellState.Alive],
-        [CellState.Dead, CellState.Dead, CellState.Dead, CellState.Dead],
-        [CellState.Dead, CellState.Dead, CellState.Dead, CellState.Dead],
-        [CellState.Dead, CellState.Dead, CellState.Dead, CellState.Alive]
-    ]);
+    expect(result[0][0]).toBe(CellState.Dead);
+    expect(result[3][0]).toBe(CellState.Dead);
 })
 
 test("cell should dead because of underpopulation", () => {
@@ -136,10 +124,48 @@ test("cell should dead because of underpopulation", () => {
 
     const result = sut.getNextIteration(currentState);
 
-    expect(result).toEqual([
-        [CellState.Dead, CellState.Dead, CellState.Alive, CellState.Dead],
-        [CellState.Dead, CellState.Dead, CellState.Alive, CellState.Alive],
+    expect(result[2][1]).toBe(CellState.Dead);
+})
+
+test("cell should contain life if there are three live neighbours case 1", () => {
+    const sut = new LifeGame(4, 4);
+    const currentState = [
         [CellState.Dead, CellState.Dead, CellState.Dead, CellState.Dead],
+        [CellState.Dead, CellState.Dead, CellState.Alive, CellState.Dead],
+        [CellState.Dead, CellState.Alive, CellState.Alive, CellState.Dead],
         [CellState.Dead, CellState.Dead, CellState.Dead, CellState.Dead]
-    ]);
+    ]
+
+    const result = sut.getNextIteration(currentState);
+
+    expect(result[1][1]).toBe(CellState.Alive);
+})
+
+test("cell should contain life if there are three live neighbours case 1", () => {
+    const sut = new LifeGame(4, 4);
+    const currentState = [
+        [CellState.Dead, CellState.Dead, CellState.Dead, CellState.Dead],
+        [CellState.Alive, CellState.Dead, CellState.Dead, CellState.Dead],
+        [CellState.Alive, CellState.Dead, CellState.Dead, CellState.Dead],
+        [CellState.Alive, CellState.Dead, CellState.Dead, CellState.Dead]
+    ]
+
+    const result = sut.getNextIteration(currentState);
+
+    expect(result[2][1]).toBe(CellState.Alive);
+    expect(result[2][3]).toBe(CellState.Alive);
+})
+
+test("game should stop if next iteration didnt change", () => {
+    const sut = new LifeGame(4, 4);
+    const currentState = [
+        [CellState.Dead, CellState.Dead, CellState.Dead, CellState.Dead],
+        [CellState.Dead, CellState.Alive, CellState.Alive, CellState.Dead],
+        [CellState.Dead, CellState.Alive, CellState.Alive, CellState.Dead],
+        [CellState.Dead, CellState.Dead, CellState.Dead, CellState.Dead]
+    ]
+
+    const result = sut.getNextIteration(currentState);
+
+    expect(result).toBeNull();
 })

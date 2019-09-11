@@ -6,23 +6,6 @@ import CellState from "./Models/CellState";
 class Board extends React.Component {
     constructor(props) {
         super(props);
-
-        this.rows = 5;
-        this.columns = 5;
-        this.nextIterationBoard = this.createEmptyBoard();
-
-        this.state = {
-            isInitial: true,
-            board: this.createEmptyBoard(),
-        }
-    }
-
-    createEmptyBoard() {
-        let initialBoard = new Array(this.rows);
-        for (let i = 0; i < this.columns; i++) {
-            initialBoard[i] = new Array(this.columns).fill(CellState.Dead)
-        }
-        return initialBoard;
     }
 
     render() {
@@ -33,10 +16,10 @@ class Board extends React.Component {
     generateBoard() {
         let rows = [];
 
-        for (let i = 0; i < this.rows; i++) {
+        for (let i = 0; i < this.getRows(); i++) {
             let row = [];
-            for (let j = 0; j < this.columns; j++) {
-                row.push(this.createCell(new Key(i, j)));
+            for (let j = 0; j < this.getColumns(); j++) {
+                row.push(this.createCell(new Key(i, j), this.props.board[i][j]));
             }
             rows.push((<div className="board-row" key={i} style={{display: "inline-block"}}>{row}</div>))
         }
@@ -44,12 +27,25 @@ class Board extends React.Component {
         return rows;
     }
 
-    createCell(key) {
-        return (<Cell key={key} cellIsSelected = { (cellState) => this.cellIsSelected(key, cellState)} />);
+    getColumns() {
+        return this.props.columns;
+    }
+
+    getRows() {
+        return this.props.rows;
+    }
+
+    createCell(key, state) {
+        return (<Cell
+            state={state}
+            key={key}
+            cellIsSelected = { (cellState) => this.cellIsSelected(key, cellState)} />);
     }
 
     cellIsSelected = (key, cellState) => {
-        this.nextIterationBoard[key.rowNum, key.colNum] = cellState;
+        let newState = this.props.board.slice();
+        newState[key.rowNum][key.colNum] = cellState;
+        this.props.onBoardChange(newState);
     }
 }
 

@@ -9,20 +9,35 @@ class LifeGame {
 
     getNextIteration(currentState) {
         const nextState = this.copyArray(currentState);
-        const aliveCells = this.getAliveCellIndexes(currentState);
+        const aliveCells = this.getCellIndexes(currentState);
 
         for (let i = 0; i < aliveCells.length; i++) {
             let cell = aliveCells[i];
             if (this.shouldDie(currentState, cell)) {
                 nextState[cell.row][cell.col] = CellState.Dead;
+                continue;
             }
+            if (this.shouldBeAlive(currentState, cell)) {
+                nextState[cell.row][cell.col] = CellState.Alive;
+                continue;
+            }
+        }
+
+        if(this.boardsAreEqual(currentState, nextState)){
+            return null;
         }
 
         return nextState;
     }
 
     shouldDie(currentState, cell) {
-        return this.isUnderpopulated(currentState, cell) || this.isOverpopulated(currentState, cell);
+        return this.isAlive(currentState, cell.row, cell.col) &&
+            (this.isUnderpopulated(currentState, cell) || this.isOverpopulated(currentState, cell));
+    }
+
+    shouldBeAlive(board, cell) {
+        let neighbors = this.getNeighbors(cell, board);
+        return neighbors.filter(c => c == CellState.Alive).length === 3;
     }
 
     copyArray(board) {
@@ -33,13 +48,11 @@ class LifeGame {
         return copy;
     }
 
-    getAliveCellIndexes(currentState) {
+    getCellIndexes(currentState) {
         let aliveCells = [];
         for (let i = 0; i < this.rowSize; i++) {
             for (let j = 0; j < this.colSize; j++) {
-                if (currentState[i][j] === CellState.Alive) {
-                    aliveCells.push(new Cell(i, j));
-                }
+                aliveCells.push(new Cell(i, j));
             }
         }
         return aliveCells;
@@ -82,6 +95,18 @@ class LifeGame {
 
     isAlive(board, rowNum, colNum) {
         return board[rowNum][colNum] === CellState.Alive;
+    }
+
+    boardsAreEqual(currentState, nextState) {
+        for (let i = 0; i < this.rowSize; i++) {
+            for (let j = 0; j < this.colSize; j++) {
+                if (currentState[i][j] != nextState[i][j]){
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
 

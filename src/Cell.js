@@ -5,9 +5,6 @@ import CellState from "./Models/CellState";
 class Cell extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            state: CellState.Dead
-        }
     }
 
     render() {
@@ -16,7 +13,7 @@ class Cell extends React.Component {
             height: 30,
             border: "1px solid #AEC1FF",
             borderRadius: "2px",
-            backgroundColor: this.state.state == CellState.Alive ? "#91C5FF" : "white",
+            backgroundColor: this.props.state == CellState.Alive ? "#91C5FF" : "white",
             margin: "1px"
         };
 
@@ -24,11 +21,7 @@ class Cell extends React.Component {
     }
 
     switchSelection = () => {
-        this.setState({
-            state: this.state.state === CellState.Dead ? CellState.Alive : CellState.Dead
-        });
-
-        this.props.cellIsSelected(this.state.state);
+        this.props.cellIsSelected(this.props.state === CellState.Dead ? CellState.Alive : CellState.Dead);
     }
 }
 
