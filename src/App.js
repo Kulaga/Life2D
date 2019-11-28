@@ -35,15 +35,17 @@ class App extends React.Component {
 
     render() {
         return (
-            <div className="container">
+            <div className="container-fluid mt-5">
                 <div className="row justify-content-center">
                     <div>
-                        <ControlPanel startGame={this.startGame} resetGame={this.resetGame}/>
                         <Board
                             rows={this.rows}
                             columns={this.columns}
                             board={this.state.nextIterationBoard}
                             onBoardChange={this.onBoardChange}/>
+                    </div>
+                    <div className="ml-3">
+                        <ControlPanel startGame={this.startGame} resetGame={this.resetGame}/>
                     </div>
                 </div>
             </div>

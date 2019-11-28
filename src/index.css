@@ -13,6 +13,10 @@ code {
 }
 
 .control-panel {
-  padding: 10px 10px 50px;
+  padding: 0px 10px;
   text-align: center;
+}
+
+.control-panel .input-group-text {
+    min-width: 90px;
 }
