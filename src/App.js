@@ -59,7 +59,7 @@ class App extends React.Component {
 
     tick() {
         this.setState((state, props) => {
-            let newIteration = this.game.getNextIteration(this.state.nextIterationBoard);
+            let newIteration = this.game.getNextIteration(state.nextIterationBoard);
             if (newIteration == null) {
                 this.stopGame();
                 return this.GenerateInitialState();
