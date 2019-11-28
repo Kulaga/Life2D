@@ -10,7 +10,7 @@ class Board extends React.Component {
 
     render() {
         let board = this.generateBoard();
-        return ( <div id="board">{board}</div> );
+        return ( <div id="board" className="board">{board}</div> );
     }
 
     generateBoard() {

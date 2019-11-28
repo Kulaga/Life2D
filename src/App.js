@@ -4,6 +4,8 @@ import Board from './Board';
 import ControlPanel from './ControlPanel';
 import CellState from "./Models/CellState";
 import LifeGame from "./Models/LifeGame";
+import BoardHistory from "./BoardHistory";
+import { thisExpression } from '@babel/types';
 
 class App extends React.Component {
     inProgress = false;
@@ -21,13 +23,13 @@ class App extends React.Component {
         };
         this.game = new LifeGame(gridConfig.selectedRows, gridConfig.selectedColumns);
         this.state = {
+            historyStates: [],
             gridConfig: gridConfig,
             nextIterationBoard: this.createEmptyBoard(gridConfig)
         }
     }
 
     createEmptyBoard(gridConfig) {
-        console.log("createEmptyBoard");
         let initialBoard = new Array(gridConfig.selectedRows);
         for (let i = 0; i < gridConfig.selectedRows; i++) {
             initialBoard[i] = new Array(gridConfig.selectedColumns).fill(CellState.Dead)
@@ -36,7 +38,6 @@ class App extends React.Component {
     }
 
     onBoardChange = (newState) => {
-        console.log("onBoardChange");
         this.setState({
             nextIterationBoard: newState
         });
@@ -46,6 +47,7 @@ class App extends React.Component {
         return (
             <div className="container-fluid mt-5">
                 <div className="row justify-content-center">
+                    <div><BoardHistory boardStates={this.state.historyStates}/></div>
                     <div>
                         <Board
                             rows={this.state.gridConfig.selectedRows}
@@ -66,7 +68,6 @@ class App extends React.Component {
     }
 
     onGridConfigChange = (gridConfig) => {
-        console.log("onGridConfigChange");
         this.game = new LifeGame(gridConfig.selectedRows, gridConfig.selectedColumns)
         this.setState({
             gridConfig: gridConfig,
@@ -82,19 +83,24 @@ class App extends React.Component {
     }
 
     tick() {
-        console.log("tik started");
         this.setState((state, props) => {
             let newIteration = this.game.getNextIteration(state.nextIterationBoard);
             if (newIteration == null) {
-                console.log("game has been stopped");
                 this.stopGame();
                 return this.GenerateInitialState();
             }
 
-            return { 
+            return {
+                historyStates: this.updateHistory(state),
                 nextIterationBoard: newIteration
             }
         });
+    }
+
+    updateHistory = (state) => {
+        var newHistoryStates = [...state.historyStates];
+        newHistoryStates.unshift(state.nextIterationBoard);
+        return newHistoryStates.slice(0, 5);
     }
 
     stopGame = () => {
@@ -108,8 +114,8 @@ class App extends React.Component {
     }
 
     GenerateInitialState() {
-        console.log("GenerateInitialState");
         return {
+            historyStates: [],
             nextIterationBoard: this.createEmptyBoard(this.state.gridConfig)
         };
     }
