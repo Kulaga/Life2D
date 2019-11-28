@@ -62,7 +62,7 @@ class App extends React.Component {
             let newIteration = this.game.getNextIteration(this.state.nextIterationBoard);
             if (newIteration == null) {
                 this.stopGame();
-                return this.GenerateInitialState();x
+                return this.GenerateInitialState();
             }
 
             return { 
