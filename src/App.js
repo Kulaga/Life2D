@@ -6,10 +6,12 @@ import CellState from "./Models/CellState";
 import LifeGame from "./Models/LifeGame";
 
 class App extends React.Component {
+    inProgress = false;
+
     constructor(props) {
         super(props)
-        this.rows = 10;
-        this.columns = 10;
+        this.rows = 20;
+        this.columns = 20;
         this.state = {
             nextIterationBoard: this.createEmptyBoard()
         }
@@ -34,7 +36,7 @@ class App extends React.Component {
             <div className="container">
                 <div className="row justify-content-center">
                     <div>
-                        <ControlPanel startGame={this.startGame}/>
+                        <ControlPanel startGame={this.startGame} resetGame={this.resetGame}/>
                         <Board
                             rows={this.rows}
                             columns={this.columns}
@@ -47,23 +49,32 @@ class App extends React.Component {
     }
 
     startGame = () => {
-        let game = new LifeGame(this.rows , this.columns);
+        this.inProgress = true;
+        this.runGameIterations();
+    }
+
+    runGameIterations() {
+        let game = new LifeGame(this.rows, this.columns);
         let newIteration = game.getNextIteration(this.state.nextIterationBoard);
 
-        if(newIteration == null) {
-            this.setState({
-                nextIterationBoard: this.createEmptyBoard()
-            });
+        if (newIteration == null || !this.inProgress) {
+            this.resetGame();
             return;
         }
 
-        console.log(newIteration)
         setTimeout(() => {
             this.setState({
                 nextIterationBoard: newIteration
             });
-            this.startGame();
+            this.runGameIterations();
         }, 100);
+    }
+
+    resetGame = () => {
+        this.inProgress = false;
+        this.setState({
+            nextIterationBoard: this.createEmptyBoard()
+        });
     }
 }
 
