@@ -9,15 +9,10 @@ class Cell extends React.Component {
 
     render() {
         var style = {
-            width: 30,
-            height: 30,
-            border: "1px solid #AEC1FF",
-            borderRadius: "2px",
-            backgroundColor: this.props.state == CellState.Alive ? "#91C5FF" : "white",
-            margin: "1px"
+            backgroundColor: this.props.state == CellState.Alive ? "#91C5FF" : "white"
         };
 
-        return <div style={style} onClick={this.switchSelection}></div>
+        return <div className="cell" style={style} onClick={this.switchSelection}></div>
     }
 
     switchSelection = () => {

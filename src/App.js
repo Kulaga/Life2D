@@ -9,25 +9,34 @@ class App extends React.Component {
     inProgress = false;
 
     constructor(props) {
-        super(props)
-        this.rows = 20;
-        this.columns = 20;        
-        this.game = new LifeGame(this.rows, this.columns);
+        super(props);
         this.intervalId = null;
+        let gridConfig = {
+            minRows: 10,
+            maxRows: 50,
+            minColumns: 10,
+            maxColumns: 50,
+            selectedRows: 10,
+            selectedColumns: 10
+        };
+        this.game = new LifeGame(gridConfig.selectedRows, gridConfig.selectedColumns);
         this.state = {
-            nextIterationBoard: this.createEmptyBoard()
+            gridConfig: gridConfig,
+            nextIterationBoard: this.createEmptyBoard(gridConfig)
         }
     }
 
-    createEmptyBoard() {
-        let initialBoard = new Array(this.rows);
-        for (let i = 0; i < this.columns; i++) {
-            initialBoard[i] = new Array(this.columns).fill(CellState.Dead)
+    createEmptyBoard(gridConfig) {
+        console.log("createEmptyBoard");
+        let initialBoard = new Array(gridConfig.selectedRows);
+        for (let i = 0; i < gridConfig.selectedRows; i++) {
+            initialBoard[i] = new Array(gridConfig.selectedColumns).fill(CellState.Dead)
         }
         return initialBoard;
     }
 
     onBoardChange = (newState) => {
+        console.log("onBoardChange");
         this.setState({
             nextIterationBoard: newState
         });
@@ -39,17 +48,30 @@ class App extends React.Component {
                 <div className="row justify-content-center">
                     <div>
                         <Board
-                            rows={this.rows}
-                            columns={this.columns}
+                            rows={this.state.gridConfig.selectedRows}
+                            columns={this.state.gridConfig.selectedColumns}
                             board={this.state.nextIterationBoard}
                             onBoardChange={this.onBoardChange}/>
                     </div>
                     <div className="ml-3">
-                        <ControlPanel startGame={this.startGame} resetGame={this.resetGame}/>
+                        <ControlPanel 
+                            startGame={this.startGame} 
+                            resetGame={this.resetGame} 
+                            gridConfig={this.state.gridConfig}
+                            onGridConfigChange={this.onGridConfigChange} />
                     </div>
                 </div>
             </div>
         );
+    }
+
+    onGridConfigChange = (gridConfig) => {
+        console.log("onGridConfigChange");
+        this.game = new LifeGame(gridConfig.selectedRows, gridConfig.selectedColumns)
+        this.setState({
+            gridConfig: gridConfig,
+            nextIterationBoard: this.createEmptyBoard(gridConfig)
+        });
     }
 
     startGame = () => {
@@ -60,9 +82,11 @@ class App extends React.Component {
     }
 
     tick() {
+        console.log("tik started");
         this.setState((state, props) => {
             let newIteration = this.game.getNextIteration(state.nextIterationBoard);
             if (newIteration == null) {
+                console.log("game has been stopped");
                 this.stopGame();
                 return this.GenerateInitialState();
             }
@@ -84,8 +108,9 @@ class App extends React.Component {
     }
 
     GenerateInitialState() {
+        console.log("GenerateInitialState");
         return {
-            nextIterationBoard: this.createEmptyBoard()
+            nextIterationBoard: this.createEmptyBoard(this.state.gridConfig)
         };
     }
 }

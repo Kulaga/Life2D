@@ -19,6 +19,21 @@
   color: white;
 }
 
+.cell {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #AEC1FF;
+    border-radius: 2px;    
+    margin: 1px;
+    display: inline-block;
+}
+
+.board-row {
+    font-size: 0px;
+    letter-spacing: 0px;
+    word-spacing: 0px;
+}
+
 .App-link {
   color: #61dafb;
 }

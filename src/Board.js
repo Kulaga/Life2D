@@ -21,7 +21,7 @@ class Board extends React.Component {
             for (let j = 0; j < this.getColumns(); j++) {
                 row.push(this.createCell(new Key(i, j), this.props.board[i][j]));
             }
-            rows.push((<div className="board-row" key={i} style={{display: "inline-block"}}>{row}</div>))
+            rows.push((<div key={i} className="board-row">{row}</div>))
         }
 
         return rows;

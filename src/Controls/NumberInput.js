@@ -11,7 +11,13 @@ class NumberInput extends React.Component {
                 <div className="input-group-prepend">
                     <span className="input-group-text" id="basic-addon1">{this.props.name}</span>
                 </div>
-                <input type="number" className="form-control"/>
+                <input 
+                    type="number" 
+                    min={this.props.min}
+                    max={this.props.max}
+                    defaultValue={this.props.value} 
+                    className="form-control" 
+                    onChange={(event) => this.props.onValueChange(parseInt(event.target.value, 10))}/>
             </div>
         );
     }
