@@ -1,5 +1,6 @@
 import React from 'react';
 import Board from './Board'
+import Transition  from 'react-transition-group';
 
 
 class BoardHistory extends React.Component {
@@ -12,9 +13,6 @@ class BoardHistory extends React.Component {
         for (let i = 0; i < this.props.boardStates.length; i++) {
             const boardState = this.props.boardStates[i];
             boards.push((
-                <div>
-                    
-                </div>
                 <Board
                     key={i}
                     rows={10}

@@ -47,15 +47,17 @@ class App extends React.Component {
         return (
             <div className="container-fluid mt-5">
                 <div className="row justify-content-center">
-                    <div><BoardHistory boardStates={this.state.historyStates}/></div>
-                    <div>
+                    <div className="col-5 ml-left">
+                        <BoardHistory boardStates={this.state.historyStates}/>
+                    </div>
+                    <div className="">
                         <Board
                             rows={this.state.gridConfig.selectedRows}
                             columns={this.state.gridConfig.selectedColumns}
                             board={this.state.nextIterationBoard}
                             onBoardChange={this.onBoardChange}/>
                     </div>
-                    <div className="ml-3">
+                    <div className="col-1 mr-auto">
                         <ControlPanel 
                             startGame={this.startGame} 
                             resetGame={this.resetGame} 
